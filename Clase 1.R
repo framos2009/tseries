@@ -14,7 +14,7 @@
 ################################
 rm(list = ls())
 
-path = "..........." ## incorporar directorio de trabajo
+path = "C:/MCD_Source_R/TSeries/tseries" ## incorporar directorio de trabajo
 setwd(path)
 
 #####################
