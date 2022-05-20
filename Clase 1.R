@@ -1,13 +1,13 @@
 ##########################################################
-#             ANÁLISIS DE SERIES TEMPORALES              #
-#	            MAESTRÍA EN CIENCIA DE DATOS               #
-#                FACULTAD DE INGENIERÍA                  #
+#             AN?LISIS DE SERIES TEMPORALES              #
+#	            MAESTR?A EN CIENCIA DE DATOS               #
+#                FACULTAD DE INGENIER?A                  #
 #                 UNIVERSIDAD AUSTRAL                    #
 ##########################################################
 
-## Asignatura: ANÁLISIS DE SERIES TEMPORALES
+## Asignatura: AN?LISIS DE SERIES TEMPORALES
 ## Docente: Rodrigo Del Rosso
-## Asistentes: Sebastián Calcagno - Fernando Martínez
+## Asistentes: Sebasti?n Calcagno - Fernando Mart?nez
 
 ################################
 ####### SETEO DE CARPETA #######
@@ -20,22 +20,32 @@ setwd(path)
 #####################
 ## CARGAR PAQUETES ##
 #####################
+listofpackages <- c( "tseries", "forecast", "astsa", "PerformanceAnalytics", 
+                     "quantmod", "Quandl", "gridExtra", "dygraphs", "PASWR2", 
+                     "pastecs", "psych", "lessR")
+newPackages <- listofpackages[ !(listofpackages %in%
+                                   installed.packages()[, "Package"])]
+if(length(newPackages)) install.packages(newPackages)
+for (paquete in listofpackages) {
+  suppressMessages(library(paquete, character.only = TRUE))
+}
 
-suppressPackageStartupMessages({
-  library(tseries)
-  library(forecast)
-  library(astsa)
-  library(PerformanceAnalytics)
-  library(quantmod)
-  library(Quandl)
-  library(ggplot2)
-  library(gridExtra)
-  library(dygraphs)
-  library(PASWR2)
-  library(pastecs)
-  library(psych)
-  library(lessR)
-})
+
+# suppressPackageStartupMessages({
+#   library(tseries)
+#   library(forecast)
+#   library(astsa)
+#   library(PerformanceAnalytics)
+#   library(quantmod)
+#   library(Quandl)
+#   library(ggplot2)
+#   library(gridExtra)
+#   library(dygraphs)
+#   library(PASWR2)
+#   library(pastecs)
+#   library(psych)
+#   library(lessR)
+# })
 
 #################
 ## TIME SERIES ##
@@ -48,7 +58,7 @@ white_noise <- arima.sim(model = list(order = c(0, 0, 0)), n = 100)
 # ?arima.sim
 #data.class(white_noise)
 
-# Gráfico del Ruido Blanco
+# Gr?fico del Ruido Blanco
 autoplot(white_noise) + 
   ggtitle("Ruido Blanco", subtitle = "En Niveles") + 
   ylab("")
@@ -93,7 +103,7 @@ getSymbols("^GSPC",
 
 head(GSPC)
 
-lgspc <- log(Ad(GSPC)) ## Logaritmo del Nivel Ajustado del Índice Bursatil
+lgspc <- log(Ad(GSPC)) ## Logaritmo del Nivel Ajustado del ?ndice Bursatil
 dlgspc <- diff(lgspc)  ## Rendimiento logaritmico
 
 ## Sobre GSPC
@@ -111,9 +121,9 @@ y2 = autoplot(diff(Ad(GSPC))) +
 
 grid.arrange(y1,y2)
 
-## FUNCIÓN DE AUTOCORRELACIÓN ## (FAC) o ACF
+## FUNCI?N DE AUTOCORRELACI?N ## (FAC) o ACF
 
-## Gráfico de la Función de Autocorrelación
+## Gr?fico de la Funci?n de Autocorrelaci?n
 acf(rw_drift)
 
 ## Otra forma de calcular la FAC
@@ -140,7 +150,7 @@ ggAcf(dlgspc)
 ## PRECIO DEL BARRIL DE PETROLEO - QUANDL ## 
 
 # Quandl
-api_key = "..........." ## la deben obtener de la página de Quandl
+api_key = "..........." ## la deben obtener de la p?gina de Quandl
 Quandl::Quandl.api_key(api_key)
 
 ## Descargar Precio del Barril de Petroleo
@@ -196,7 +206,7 @@ autoplot(morta)
 
 ## como arreglar que la variable sea un factor ##
 
-time = as.Date(mortalidad$ï..indice_tiempo)
+time = as.Date(mortalidad$?..indice_tiempo)
 data.class(time)
 
 mortalidad_infantil_argentina <- as.numeric(as.character(mortalidad$mortalidad_infantil_argentina))
@@ -216,32 +226,32 @@ ggAcf(mortalidad_argentina)
 
 data("co2")
 autoplot(co2, 
-         main = "Consumo de Dióxido de Carbono", 
+         main = "Consumo de Di?xido de Carbono", 
          ylab = "ppm")
 
 ggAcf(co2)
 
 data("AirPassengers")
 autoplot(AirPassengers, 
-         main = "Pasajeros Aéreos", 
+         main = "Pasajeros A?reos", 
          ylab = "Cantidad de Personas")
 
 # Diferenciar la Estacionalidad
-nsdiffs(AirPassengers)  # Cantidad necesaria de diferenciación estacional
+nsdiffs(AirPassengers)  # Cantidad necesaria de diferenciaci?n estacional
 
 ap_seasdiff <- diff(AirPassengers, 
                     lag = frequency(AirPassengers), 
-                    differences = 1)  # Diferenciación estacional
+                    differences = 1)  # Diferenciaci?n estacional
 
 autoplot(ap_seasdiff, 
          main="Seasonally Differenced")  # no es estacionaria!!!
 
 # Convertirla en estacionaria
-ndiffs(ap_seasdiff)  # Cantidad necesaria de diferenciación para hacerla estacionaria
+ndiffs(ap_seasdiff)  # Cantidad necesaria de diferenciaci?n para hacerla estacionaria
 stationaryTS <- diff(ap_seasdiff, differences= 1)
 autoplot(stationaryTS, main="Differenced and Stationary")  # Parece ser estacionaria
 
-# Descomposición de series
+# Descomposici?n de series
 decompose(AirPassengers, type = "additive")
 autoplot(decompose(AirPassengers, type = "additive"))
 autoplot(decompose(AirPassengers, type = "multiplicative"))
@@ -276,7 +286,7 @@ summary(Ad(GSPC))
 
 mean(Ad(GSPC)) ## ??
 
-mean(Ad(GSPC), na.rm = T)  ## Remover NA´s
+mean(Ad(GSPC), na.rm = T)  ## Remover NA?s
 
 sd(Ad(GSPC), na.rm = T)
 
