@@ -12,9 +12,9 @@
 ####### SETEO DE CARPETA #######
 ################################
 rm(list = ls())
-.rs.restartR() ## reiniciar sesión
+.rs.restartR() ## reiniciar sesi?n
 
-path = "..........." ## incorporar directorio de trabajo
+path = "C:/MCD_Source_R/TSeries/tseries/" ## incorporar directorio de trabajo
 setwd(path)
 
 ## CARGAR FUNCIONES PROGRAMADAS
@@ -25,19 +25,16 @@ source(paste0(path,"Funciones.R"))
 ## CARGAR PAQUETES ##
 #####################
 
-suppressPackageStartupMessages({
-  library(tseries)
-  library(forecast)
-  library(ggplot2)
-  library(gridExtra)
-  library(car)
-  library(nortest)
-  library(AdequacyModel)
-  library(lmtest)
-  library(quantmod)
-  library(dygraphs)
-  library(lessR)
-})
+listofpackages <- c( "tseries", "forecast", "ggplot2", "car", 
+                     "quantmod", "nortest", "gridExtra", "AdequacyModel",
+                     "lmtest", "lessR", "dygraphs")
+newPackages <- listofpackages[ !(listofpackages %in%
+                                   installed.packages()[, "Package"])]
+if(length(newPackages)) install.packages(newPackages)
+for (paquete in listofpackages) {
+  suppressMessages(library(paquete, character.only = TRUE))
+}
+
 
 #################
 ## TIME SERIES ##
@@ -56,22 +53,22 @@ autoplot(ma_1) +
   labs(subtitle = bquote(theta == .(theta1))) + 
   ylab("")
 
-## Incorrelación
+## Incorrelaci?n
 Box.test(ma_1,lag = 1,type = "Ljung-Box")
 
-# Función de Autocorrelación FAC
+# Funci?n de Autocorrelaci?n FAC
 
 ggAcf(ma_1) + 
   ggtitle("MA(1)") + 
   labs(subtitle = bquote(theta == .(theta1)))
 
-# Función de Autocorrelación Parcial (FACP  - PACF)
+# Funci?n de Autocorrelaci?n Parcial (FACP  - PACF)
 
 ggAcf(ma_1, type = "partial") + 
   ggtitle("MA(1)") + 
   labs(subtitle = bquote(theta == .(theta1)))
 
-## Estimación del modelo
+## Estimaci?n del modelo
 
 modelo_ma = arima(ma_1,order = c(0,0,1))
 summary(modelo_ma)
@@ -91,12 +88,12 @@ arma11 <- arima.sim(n=100,model = list(ar=0.80,ma=0.50),sd=1)
 autoplot(arma11) + 
   ggtitle("ARMA(1,1) Simulado")
 
-# Función de Autocorrelación FAC
+# Funci?n de Autocorrelaci?n FAC
 
 ggAcf(arma11) + 
   ggtitle("ARMA(1,1)")
 
-# Función de Autocorrelación Parcial (FACP  - PACF)
+# Funci?n de Autocorrelaci?n Parcial (FACP  - PACF)
 
 ggAcf(arma11, type = "partial") + 
   ggtitle("ARMA(1,1)")
@@ -109,12 +106,12 @@ arma22 <- arima.sim(n=100,model=list(ar = c(0.3,0.6),ma = c(2,3)))
 autoplot(arma22) + 
   ggtitle("ARMA(2,2) Simulado")
 
-# Función de Autocorrelación FAC
+# Funci?n de Autocorrelaci?n FAC
 
 ggAcf(arma22) + 
   ggtitle("ARMA(2,2)")
 
-# Función de Autocorrelación Parcial (FACP  - PACF)
+# Funci?n de Autocorrelaci?n Parcial (FACP  - PACF)
 
 ggAcf(arma22, type = "partial") + 
   ggtitle("ARMA(2,2)")
@@ -132,7 +129,7 @@ p2 = autoplot(x2) + ggtitle("ARMA(1,1) Simulado")
 
 grid.arrange(p1, p2, ncol=2)
 
-## Criterios de Información
+## Criterios de Informaci?n
 
 AIC_Matrix(ar_1,p.order = 2,q.order = 2)
 AIC_Matrix(ma_1,p.order = 2,q.order = 2)

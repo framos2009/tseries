@@ -18,40 +18,45 @@ options(scipen = 999)
 ####### SETEO DE CARPETA #######
 ################################
 
-path = "D:/OneDrive - Facultad de Cs Económicas - UBA/Docencia/Posgrado/Austral/Análisis de Series Temporales/2021/Rosario/Práctica/Clase 4/"
+path = "C:/MCD_Source_R/TSeries/tseries/"
 setwd(path)
 
 #####################
 ## CARGAR PAQUETES ##
 #####################
 
-suppressPackageStartupMessages({
-  library(forecast)
-  library(ggplot2)
-  library(gridExtra)
-  library(PASWR2)
-  library(dplyr)
-  library(psych)
-  library(pastecs)
-  library(astsa)
-  library(lessR)
-  library(tseries)
-  library(zoo)
-  library(xts)
-  library(fma)
-  library(expsmooth)
-  library(lmtest)
-  library(Quandl)
-  library(fpp)
-  library(urca)
-  library(AER)
-  library(fUnitRoots)
-  library(CADFtest)
-  library(fpp2)
-  library(car)
-  library(tseries)
-  library(gridExtra)
-})
+listofpackages <- c( "forecast",
+                     "ggplot2",
+                     "gridExtra",
+                     "PASWR2",
+                     "dplyr",
+                     "psych",
+                     "pastecs",
+                     "astsa",
+                     "lessR",
+                     "tseries",
+                     "zoo",
+                     "xts",
+                     "fma",
+                     "expsmooth",
+                     "lmtest",
+                     "Quandl",
+                     "fpp",
+                     "urca",
+                     "AER",
+                     "fUnitRoots",
+                     "CADFtest",
+                     "fpp2",
+                     "car",
+                     "tseries",
+                     "gridExtra" )
+newPackages <- listofpackages[ !(listofpackages %in%
+                                   installed.packages()[, "Package"])]
+if(length(newPackages)) install.packages(newPackages)
+for (paquete in listofpackages) {
+  suppressMessages(library(paquete, character.only = TRUE))
+}
+
 
 
 # Graficar la serie "a10"
@@ -74,7 +79,7 @@ a10 %>%
   BoxCox(lambda = 0.3) %>% 
   autoplot()
 
-# Comparar con el valor provisto por la función BoxCox.lambda()
+# Comparar con el valor provisto por la funci?n BoxCox.lambda()
 BoxCox.lambda(a10)
 
 a10 %>% 
@@ -83,7 +88,7 @@ a10 %>%
 
 # Cargar datos para Evaluar Normalidad
 
-datos <- read.table("orig.txt", header = T)
+datos <- read.table("./datasets/orig.txt", header = T)
 head(datos)
 
 jarque.bera.test(datos$plasma)
@@ -98,10 +103,10 @@ jarque.bera.test(datos$plasma_transforma)
 
 ## SERIES NO ESTACIONARIAS ##
 
-datos2 <- read.table("crestcolgate.dat", 
+datos2 <- read.table("./datasets/crestcolgate.dat", 
                      header = TRUE)
 
-## CUOTA DE MERCADO DE COLGATE EN ESPAÑA ##
+## CUOTA DE MERCADO DE COLGATE EN ESPA?A ##
 mkt_share_colgate = ts(datos2$X0.424,
                        start = c(1958, 01), 
                        end = c(1963,04), 
@@ -272,25 +277,25 @@ d_lpib_mex <- diff(lpib_mex)
 d_lpib_mex2 <- diff(lpib_mex,2)
 
 v1 = autoplot(PIB_Mex) + 
-  ggtitle("PIB", subtitle = "México") + 
+  ggtitle("PIB", subtitle = "M?xico") + 
   ylab("")
 
 v2 = autoplot(lpib_mex) + 
-  ggtitle("Logaritmo PIB", subtitle = "México") +
+  ggtitle("Logaritmo PIB", subtitle = "M?xico") +
   ylab("")
 
 v3 = autoplot(d_lpib_mex) + 
-  ggtitle("1era Diferencia", subtitle = " Logaritmo PIB México") +
+  ggtitle("1era Diferencia", subtitle = " Logaritmo PIB M?xico") +
   ylab("")
 
 v4 = autoplot(d_lpib_mex2) + 
-  ggtitle("2da Diferencia", subtitle = " Logaritmo PIB México") +
+  ggtitle("2da Diferencia", subtitle = " Logaritmo PIB M?xico") +
   ylab("")
 
 grid.arrange(v1,v2,v3,v4)
 
 ##################################
-## ANÁLISIS DE RAÍCES UNITARIAS ##
+## AN?LISIS DE RA?CES UNITARIAS ##
 ##################################
 
 ## WHITE NOISE
@@ -298,7 +303,7 @@ TT <- 100
 wn <- rnorm(TT)  # white noise
 autoplot(ts(wn)) + ggtitle("Ruido Blanco") + ylab("")
 
-## PRIMERA FORMA DE TESTEAR PRESENCIA DE RAÍCES UNITARIAS
+## PRIMERA FORMA DE TESTEAR PRESENCIA DE RA?CES UNITARIAS
 tseries::adf.test(wn)
 
 tseries::adf.test(wn, k = 0)
@@ -321,7 +326,7 @@ tseries::adf.test(rw, k = 0)
 j = adf.test(rw, k = 0)
 j$p.value
 
-## OTRA FUNCIÓN "ur.df" PROVIENE DEL PACKAGE "urca"
+## OTRA FUNCI?N "ur.df" PROVIENE DEL PACKAGE "urca"
 wn <- rnorm(TT)
 test <- ur.df(wn, type = "trend", lags = 0)
 j = summary(test)
@@ -382,21 +387,21 @@ adf.test(inflation_us)
 adf.test(money_supply)
 
 ## RUIDO BLANCO
-x <- rnorm(1000)  # Sin raíz unitaria, ¿porque?
+x <- rnorm(1000)  # Sin ra?z unitaria, ?porque?
 autoplot(ts(x))
 adf.test(x)
 
 ## RANDOM WALK (integrar un Ruido Blanco es un RW)
-y <- diffinv(x)   # Contiene una raíz unitaria
+y <- diffinv(x)   # Contiene una ra?z unitaria
 autoplot(ts(y))
 adf.test(y, k = 0)
 
-## CUANTAS VECES HABRÍA QUE DIFERENCIAR LA SERIE PARA CONVERTIRLA EN ESTACIONARIA
+## CUANTAS VECES HABR?A QUE DIFERENCIAR LA SERIE PARA CONVERTIRLA EN ESTACIONARIA
 ndiffs(unemp_us)
 ndiffs(inflation_us)
 ndiffs(money_supply)
 
-## PROBAMOS CON LAS SERIES DEL LIBRO DE DANIEL PEÑA
+## PROBAMOS CON LAS SERIES DEL LIBRO DE DANIEL PE?A
 ndiffs(mkt_share_colgate)
 ndiffs(madrid_index)
 ndiffs(pob_may16)
@@ -432,9 +437,9 @@ summary(trend.df)
 summary(test)@teststat
 summary(test)@cval
 
-## ¿SE ANIMAN A CREAR UNA FUNCIÓN PARA HACER EL TEST? ##
+## ?SE ANIMAN A CREAR UNA FUNCI?N PARA HACER EL TEST? ##
 
-## Para determinar el orden de integración de las variables, 
+## Para determinar el orden de integraci?n de las variables, 
 ## se aplican las pruebas Dickey Fuller Aumentado con sus tres posibilidades, 
 ## 1) tendencia y constante; 
 ## 2) con constante y, 
